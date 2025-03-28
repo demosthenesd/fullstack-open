@@ -1,10 +1,8 @@
 ```mermaid
 
-flowchart LR
+sequenceDiagram
+    Alice->>John: Hello John, how are you?
+    John-->>Alice: Great!
+    Alice-)John: See you later!
 
-A[Hard] -->|Text| B(Round)
-B --> C{Decision}
-C -->|One| D[Redfsult 1]
-C -->|Two| E[Result 2]
-D -->|FROM KUBUNTU| TERMINALs
 ```
