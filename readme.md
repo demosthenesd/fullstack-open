@@ -1,1 +1,1 @@
-This a readme file
+This is my attempt of the Fullstack Open site -- good practice
