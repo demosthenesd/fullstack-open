@@ -39,7 +39,12 @@ const App = () => {
     console.log(Math.max(...votes));
 
     return (
-      <p>{anecdotes[votes.indexOf(Math.max(...votes))]}</p>
+      <>
+        <p>{anecdotes[votes.indexOf(Math.max(...votes))]}</p>
+        <p>
+          has {Math.max(...votes)} votes
+        </p>
+      </>
     )
 
 
