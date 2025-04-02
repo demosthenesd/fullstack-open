@@ -16,7 +16,6 @@ const App = () => {
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
   const randomNumber = Math.floor(Math.random() * anecdotes.length);
   const handleNextButtonClick = (randomNumber) => {
-    console.log(randomNumber)
     setSelected(randomNumber)
   }
 
