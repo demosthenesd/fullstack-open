@@ -1,15 +1,17 @@
 import Part from "./Part";
 
+import Total from "./Total";
 
 
-const Content = () =>{
-    
-    
+const Content = ({ parts }) => {
+
+    const total = parts.reduce((prev,part)=> prev + part.exercises,0);
+
     return (
-<>
-        <Part/>
-        <Part/>
-</>
+        <>
+            {parts.map(part => <Part key={part.id} part={part} />)}
+            <Total total ={total}/>
+        </>
     )
 }
 

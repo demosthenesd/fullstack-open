@@ -4,11 +4,12 @@ import Content from "./components/Content";
 
 
 
-const Course = ({course}) => {
+const Course = ({ course }) => {
 
   return (
     <>
-    <Header text={course.name}/>
+      <Header text={course.name} />
+      <Content parts={course.parts} />
     </>
   )
 
