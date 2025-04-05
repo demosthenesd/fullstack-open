@@ -2,12 +2,17 @@ import Note from './components/Note'
 import { useState } from 'react'
 
 const App = (props) => {
- 
-  const [notes, setNotes] = useState(props.notes)
 
+  const [notes, setNotes] = useState(props.notes)
   const [newNote, setNewNote] = useState(
     'a new note...'
   )
+
+  const [showAll, setshowAll] = useState(true);
+
+  const notesToShow = showAll ? notes : notes.filter(note => note.important);
+
+
 
 
   const addNote = (event) => {
@@ -17,7 +22,7 @@ const App = (props) => {
       important: Math.random() < 0.5,
       id: String(notes.length + 1),
     }
-  
+
     setNotes(notes.concat(noteObject))
     setNewNote('')
   }
@@ -30,8 +35,14 @@ const App = (props) => {
   return (
     <div>
       <h1>Notes</h1>
+      <>
+      <button onClick = {()=> setshowAll(!showAll)}>
+        show {showAll ? 'important': 'all'}
+      </button>
+      </>
       <ul>
-        {notes.map(note =>
+        
+        {notesToShow.map(note =>
           <Note key={note.id} note={note} />
         )}
       </ul>
