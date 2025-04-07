@@ -13,8 +13,6 @@ const App = (props) => {
   const notesToShow = showAll ? notes : notes.filter(note => note.important);
 
 
-
-
   const addNote = (event) => {
     event.preventDefault()
     const noteObject = {
