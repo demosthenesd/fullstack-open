@@ -18,12 +18,12 @@
     {
       "id": "3c02",
       "content": "hot",
-      "important": true
+      "important": false
     },
     {
       "id": "1876",
       "content": "wassap",
-      "important": false
+      "important": true
     },
     {
       "id": "3b8c",
