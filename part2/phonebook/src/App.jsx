@@ -1,17 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 
-const App = (props) => {
-  const [persons, setPersons] = useState(props.persons);
+import personService from './services/persons'
 
-  const [filteredPersons, setFilteredPersons] = useState(persons);
+const App = (props) => {
+  const [persons, setPersons] = useState([]);
+
+  const [filteredPersons, setFilteredPersons] = useState([]);
 
 
   const [newName, setNewName] = useState('jawma')
   const [newNumber, setNewNumber] = useState('0421 021 393')
   const [newFilter, setNewFilter] = useState('')
+
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(person => {
+        setPersons(person)
+        setFilteredPersons(person)
+      })
+  }, [])
+
 
 
   const handleInputChange = (e) => setNewName(e.target.value);
@@ -30,11 +42,32 @@ const App = (props) => {
     }
     const personExist = persons.some(person => person.name === newName);
     if (personExist) { return alert(`${newName} is already added to the phonebook`); }
-    setPersons(persons.concat(personObject))
-    setFilteredPersons(persons.concat(personObject));
-    setNewName('');
-    setNewNumber('');
+
+
+    personService.create(personObject).then(res => {
+      setPersons(persons.concat(res))
+      setFilteredPersons(persons.concat(res));
+      setNewName('');
+      setNewNumber('');
+    })
   }
+
+
+  const deletePerson = (id) => {
+    const deleteThis = filteredPersons.find(person => person.id === id);
+    if (!deleteThis) return;
+
+    personService.deletePerson(deleteThis.id).then(res => {
+
+      const updatedPersons = filteredPersons.filter(person => person.id !== res.id);
+
+      if (window.confirm("ARE YOU SURE YOU WANT TO DELETE?")) setFilteredPersons(updatedPersons);
+    }
+    );
+  }
+
+
+
 
   return (
     <div>
@@ -48,7 +81,7 @@ const App = (props) => {
         newNumber={newNumber}
       />
       <h3>Numbers</h3>
-      <Persons filteredPersons={filteredPersons} />
+      <Persons filteredPersons={filteredPersons} deletePerson={deletePerson} />
     </div>
   )
 }

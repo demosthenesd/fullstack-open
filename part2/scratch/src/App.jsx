@@ -13,7 +13,7 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
 
   useEffect(() => {
-    noteService
+    noteService 
       .getAll()
       .then(initialNotes => {
         setNotes(initialNotes)
