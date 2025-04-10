@@ -41,7 +41,15 @@ const App = (props) => {
       number: newNumber
     }
     const personExist = persons.some(person => person.name === newName);
-    if (personExist) { return alert(`${newName} is already added to the phonebook`); }
+    if (personExist) {
+      if (window.confirm(`${newName} is already added to the phonebook,replace the old number with a new one?`))
+        {
+          //REPLACE NEW NUMBER HERE TO THE EXISTING PHONE NAME
+        };
+    }
+
+    console.log(personExist);
+
 
 
     personService.create(personObject).then(res => {
@@ -54,14 +62,11 @@ const App = (props) => {
 
 
   const deletePerson = (id) => {
-    const deleteThis = filteredPersons.find(person => person.id === id);
-    if (!deleteThis) return;
-
-    personService.deletePerson(deleteThis.id).then(res => {
-
+    const personToDelete = filteredPersons.find(person => person.id === id);
+    if (!personToDelete) return;
+    if (window.confirm(`ARE YOU SURE YOU WANT TO DELETE ${personToDelete.name}?`)) personService.deletePerson(personToDelete.id).then(res => {
       const updatedPersons = filteredPersons.filter(person => person.id !== res.id);
-
-      if (window.confirm("ARE YOU SURE YOU WANT TO DELETE?")) setFilteredPersons(updatedPersons);
+      setFilteredPersons(updatedPersons);
     }
     );
   }
