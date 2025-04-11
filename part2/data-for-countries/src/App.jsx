@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import CountryForm from './Components/CountryForm'
 import countryService from './services/countries'
 import Results from "./Components/Results"
+import Weather from './Components/Weather';
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
 
 
   useEffect(() => {
+
 
     if (search !== null && search.trim() !== "") countryService.getCountry(search).then(res => {
       setCountries(res)
@@ -28,9 +30,9 @@ function App() {
   return (
     <>
       <div>
-        Find countries   <CountryForm onChange={handleSearch} />
+        Find countries   <CountryForm onChange={handleSearch} /> <button onClick={() => setSearch("phil")}>back</button>
       </div>
-      <Results countries ={countries} setSearch ={setSearch} setCountries={ setCountries}/>
+      <Results countries={countries} setSearch={setSearch}  />
     </>
   )
 }

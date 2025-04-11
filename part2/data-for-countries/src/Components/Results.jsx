@@ -1,19 +1,10 @@
 import countryService from '../services/countries'
+import Weather from './Weather';
 
-const Results = ({ countries, setCountries, setSearch }) => {
 
-    const handleShowButton = (e) => {
 
-        // const country = e.target.value;
+const Results = ({ countries, setSearch }) => {
 
-        countryService.getCountry(e).then(res => {
-            console.log(res[0].name.common)
-            setSearch(res[0].name.common)
-
- 
-        })
-
-    }
 
 
 
@@ -25,7 +16,6 @@ const Results = ({ countries, setCountries, setSearch }) => {
 
     if (countries.length === 1) {
 
-        console.log(countries[0].languages)
         return (
             <div>
                 <h1>{countries[0].name.common}</h1>
@@ -41,6 +31,8 @@ const Results = ({ countries, setCountries, setSearch }) => {
                     <img style={{ height: "50%", width: "50%" }}
                         src={countries[0].flags.svg} alt={countries[0].flags.alt} />
                 </div>
+
+                <Weather countryName={countries[0].name.common} />
             </div>
         )
     }
