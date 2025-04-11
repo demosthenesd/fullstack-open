@@ -42,22 +42,33 @@ const App = (props) => {
     }
     const personExist = persons.some(person => person.name === newName);
     if (personExist) {
-      if (window.confirm(`${newName} is already added to the phonebook,replace the old number with a new one?`))
-        {
-          //REPLACE NEW NUMBER HERE TO THE EXISTING PHONE NAME
-        };
+      if (window.confirm(`${newName} is already added to the phonebook,replace the old number with a new one?`)) {
+
+
+        const thisPerson = persons.find(person => person.name === newName);
+        const updatedPhone = { ...thisPerson, number: newNumber };
+
+        personService.update(updatedPhone.id, updatedPhone).then(
+          updatedPersons => {
+            setFilteredPersons(persons.map(person => person.id === updatedPhone.id ? updatedPersons : person))
+          }
+        )
+
+     
+
+
+      };
     }
 
-    console.log(personExist);
+    else {
 
-
-
-    personService.create(personObject).then(res => {
-      setPersons(persons.concat(res))
-      setFilteredPersons(persons.concat(res));
-      setNewName('');
-      setNewNumber('');
-    })
+      personService.create(personObject).then(res => {
+        setPersons(persons.concat(res))
+        setFilteredPersons(persons.concat(res));
+        setNewName('');
+        setNewNumber('');
+      })
+    }
   }
 
 
