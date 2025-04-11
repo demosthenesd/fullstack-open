@@ -2,18 +2,21 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
-
 import personService from './services/persons'
+import Notification from './components/Notification';
+
 
 const App = (props) => {
   const [persons, setPersons] = useState([]);
-
   const [filteredPersons, setFilteredPersons] = useState([]);
 
 
-  const [newName, setNewName] = useState('jawma')
-  const [newNumber, setNewNumber] = useState('0421 021 393')
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+
+  const [message, setMessage] = useState("");
+
 
   useEffect(() => {
     personService
@@ -51,10 +54,25 @@ const App = (props) => {
         personService.update(updatedPhone.id, updatedPhone).then(
           updatedPersons => {
             setFilteredPersons(persons.map(person => person.id === updatedPhone.id ? updatedPersons : person))
-          }
-        )
+            setNewName('');
+            setNewNumber('');
+            setMessage(`Successfully updated ${updatedPhone.name}'s number to ${updatedPhone.number}`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
 
-     
+          }
+
+        ).catch(error => {
+          alert(
+            `the person '${updatedPhone.name}' was already deleted from server`
+          )
+          personService.getAll().then(freshPersons => {
+            setFilteredPersons(freshPersons);
+          });
+        })
+
+
 
 
       };
@@ -67,6 +85,12 @@ const App = (props) => {
         setFilteredPersons(persons.concat(res));
         setNewName('');
         setNewNumber('');
+        setMessage(`Added ${res.name}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+
+
       })
     }
   }
@@ -78,6 +102,11 @@ const App = (props) => {
     if (window.confirm(`ARE YOU SURE YOU WANT TO DELETE ${personToDelete.name}?`)) personService.deletePerson(personToDelete.id).then(res => {
       const updatedPersons = filteredPersons.filter(person => person.id !== res.id);
       setFilteredPersons(updatedPersons);
+      setMessage(`successfully deleted ${res.name}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+
     }
     );
   }
@@ -88,6 +117,7 @@ const App = (props) => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter value={newFilter} onChange={handleFilterChange} />
       <h3>add new</h3>
       <PersonForm handleFormSubmit={handleFormSubmit}
