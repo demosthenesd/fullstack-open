@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json())
 
 
-const persons = [
+let persons = [
     {
         "id": "1",
         "name": "Arto Hellas",
@@ -50,6 +50,41 @@ app.get("/api/persons/:id", (req, res) => {
 
     const personQuery = persons.find(person => person.id === req.params.id);
     personQuery ? res.json(personQuery) : res.status(404).end();
+})
+
+
+app.delete("/api/persons/:id", (req, res) => {
+    persons = persons.filter(person => person.id !== req.params.id);
+    res.status(204).end()
+})
+
+
+const generateId = () => {
+    const maxId = persons.length > 0
+        ? Math.max(...persons.map(n => Number(n.id)))
+        : 0
+    return String(maxId + 1)
+}
+
+
+app.post("/api/persons", (req, res) => {
+
+    const newGuy = req.body;
+
+    if (!newGuy.name || !newGuy.number) return res.status(400).json({ error: "Missing name or number" });
+
+    if (persons.some((person) => person.name === newGuy.name)) return res.status(409).json({ error: "my guy, this guy already exist in the database" })
+
+
+    const toAdd = {
+        name: newGuy.name,
+        number: newGuy.number,
+        id: generateId()
+    }
+
+    persons = persons.concat(toAdd);
+
+    res.json(persons)
 })
 
 
