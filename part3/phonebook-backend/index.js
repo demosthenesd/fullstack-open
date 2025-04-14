@@ -8,7 +8,7 @@ morgan.token('body', req => {
     return JSON.stringify(req.body)
   })    
 app.use(express.json())
-app.use(morgan(':method :url :status  :response-time ms  :body'))
+app.use(morgan(':method :url :status  :response-time ms   :body'))
 
 
 morgan.token('type', function (req, res) { return req.headers['content-type'] })            
