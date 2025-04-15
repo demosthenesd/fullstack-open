@@ -44,7 +44,7 @@ app.get('/api/notes/:id', (request, response) => {
 
 app.delete('/api/notes/:id', (request, response) => {
   const id = request.params.id
-    = notes.filter(note => note.id !== id)
+  notes = notes.filter(note => note.id !== id)
 
   response.status(204).end()
 })
@@ -75,7 +75,7 @@ app.post('/api/notes', (request, response) => {
   notes = notes.concat(note)
 
   response.json(note)
-})  
+})
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
