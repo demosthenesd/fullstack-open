@@ -1,5 +1,5 @@
 const express = require('express')
-
+const cors = require('cors')
 const app = express();
 const morgan = require('morgan')
 
@@ -10,6 +10,7 @@ morgan.token('body', req => {
 app.use(express.json())
 app.use(morgan(':method :url :status  :response-time ms   :body'))
 
+app.use(cors());
 
 morgan.token('type', function (req, res) { return req.headers['content-type'] })            
 
@@ -63,10 +64,10 @@ app.get("/api/persons/:id", (req, res) => {
 
 app.delete("/api/persons/:id", (req, res) => {
     persons = persons.filter(person => person.id !== req.params.id);
-    res.status(204).end()
+    res.json(persons).status(204).end()
 })
 
-
+ 
 const generateId = () => {
     const maxId = persons.length > 0
         ? Math.max(...persons.map(n => Number(n.id)))
@@ -92,11 +93,11 @@ app.post("/api/persons", (req, res) => {
 
     persons = persons.concat(toAdd);
 
-    res.json(persons)
+    res.json(toAdd);
 })
 
 
 
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log("listening to port: ", PORT))

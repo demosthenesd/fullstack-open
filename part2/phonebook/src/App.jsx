@@ -100,9 +100,10 @@ const App = (props) => {
     const personToDelete = filteredPersons.find(person => person.id === id);
     if (!personToDelete) return;
     if (window.confirm(`ARE YOU SURE YOU WANT TO DELETE ${personToDelete.name}?`)) personService.deletePerson(personToDelete.id).then(res => {
-      const updatedPersons = filteredPersons.filter(person => person.id !== res.id);
-      setFilteredPersons(updatedPersons);
-      setMessage(`successfully deleted ${res.name}`)
+
+      setPersons(res)
+      setFilteredPersons(res);
+      setMessage(`successfully deleted ${personToDelete.name}`)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
