@@ -1,53 +1,36 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const app = express();
 const morgan = require('morgan')
+const Person = require('./models/person');
+
+
 
 
 morgan.token('body', req => {
     return JSON.stringify(req.body)
-  })    
+})
 app.use(express.json())
 app.use(morgan(':method :url :status  :response-time ms   :body'))
 
 app.use(cors());
 
-morgan.token('type', function (req, res) { return req.headers['content-type'] })            
-
-let persons = [
-    {
-        "id": "1",
-        "name": "Arto Hellas",
-        "number": "040-123456"
-    },
-    {
-        "id": "2",
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523"
-    },
-    {
-        "id": "3",
-        "name": "Dan Abramov",
-        "number": "12-43-234345"
-    },
-    {
-        "id": "4",
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122"
-    }
-]
-
+morgan.token('type', function (req, res) { return req.headers['content-type'] })
 
 app.get("/api/persons", (req, res) => {
-    res.json(persons)
+    Person.find({}).then(person => {
+        res.json(person)
+    })
 })
 
 
-app.get("/api/info", (req, res) => {
+app.get("/api/info", async (req, res) => {
 
     const now = new Date();
-
-    const htmlRes = `<p> Phonebook has info for ${persons.length} people</p>
+    console.log(Person.find({}).then(person => { console.log(person.length) }));
+    const numOfPersons = await Person.find({}).then(person => { return person.length })
+    const htmlRes = `<p> Phonebook has info for ${numOfPersons} people</p>
                     <p>${now.toString()}
     `
     res.send(htmlRes)
@@ -57,45 +40,46 @@ app.get("/api/info", (req, res) => {
 
 app.get("/api/persons/:id", (req, res) => {
 
-    const personQuery = persons.find(person => person.id === req.params.id);
-    personQuery ? res.json(personQuery) : res.status(404).end();
+    Person.findById(request.params.id).then(person => {
+        response.json(person)
+    })
 })
 
 
-app.delete("/api/persons/:id", (req, res) => {
-    persons = persons.filter(person => person.id !== req.params.id);
-    res.json(persons).status(204).end()
+app.delete("/api/persons/:id",  (req, res) => {
+
+    Person.deleteOne({ _id: req.params.id }).then(output =>
+        res.json(output))
 })
 
- 
-const generateId = () => {
-    const maxId = persons.length > 0
-        ? Math.max(...persons.map(n => Number(n.id)))
-        : 0
-    return String(maxId + 1)
-}
 
-
+// const generateId = () => {
+//     const maxId = Person.length > 0
+//         ? Math.max(...Person.map(n => Number(n.id)))
+//         : 0
+//     return String(maxId + 1)
+// }
 app.post("/api/persons", (req, res) => {
-
     const newGuy = req.body;
 
-    if (!newGuy.name || !newGuy.number) return res.status(400).json({ error: "Missing name or number" });
-
-    if (persons.some((person) => person.name === newGuy.name)) return res.status(409).json({ error: "my guy, this guy already exist in the database" })
-
-
-    const toAdd = {
-        name: newGuy.name,
-        number: newGuy.number,
-        id: generateId()
+    if (!newGuy.name || !newGuy.number) {
+        return res.status(400).json({ error: "Missing name or number" });
     }
 
-    persons = persons.concat(toAdd);
+    const newPerson = new Person({
+        name: newGuy.name,
+        number: newGuy.number
+    });
 
-    res.json(toAdd);
-})
-
+    newPerson.save()
+        .then(savedPerson => {
+            res.json(savedPerson);
+        })
+        .catch(error => {
+            console.error("Error saving person:", error.message);
+            res.status(500).json({ error: "Failed to save person" });
+        });
+});
 
 
 
