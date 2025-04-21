@@ -13,13 +13,16 @@ app.use(express.static('dist'))
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
+
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
 
   next(error)
 }
-
 
 
 app.get('/api/notes', (request, response) => {
@@ -29,7 +32,7 @@ app.get('/api/notes', (request, response) => {
 })
 
 
-app.get('/api/notes/:id', (request, response,next) => {
+app.get('/api/notes/:id', (request, response, next) => {
   Note.findById(request.params.id).then(note => {
     if (note) {
       response.json(note)
@@ -51,15 +54,7 @@ app.delete('/api/notes/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-
-const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => Number(n.id)))
-    : 0
-  return String(maxId + 1)
-}
-
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const body = request.body
 
   if (!body.content) {
@@ -75,8 +70,7 @@ app.post('/api/notes', (request, response) => {
 
   note.save().then(savedNote => {
     response.json(savedNote)
-  })
-  response.json(note)
+  }).catch(error => next(error))
 })
 
 
