@@ -50,7 +50,7 @@ const blogs = [
     url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
     likes: 2,
     __v: 0
-  }  
+  }
 ]
 
 
@@ -88,15 +88,14 @@ describe('total likes', () => {
 
   test('when list has only many blogs, equals the total likes of of all', () => {
     const result = listHelper.totalLikes(blogs)
-    assert.strictEqual(result, 36 )
+    assert.strictEqual(result, 36)
   })
 
 })
 
 
 describe('max likes', () => {
-  
-  
+
   test('returns the blog with the most like', () => {
     const result = listHelper.favoriteBlog(blogs)
     assert.deepStrictEqual(result, {
@@ -106,6 +105,20 @@ describe('max likes', () => {
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
       likes: 12,
       __v: 0
-    } )
+    })
+  })
+})
+
+
+
+
+
+
+describe('most blogs', () => {
+
+  test('returns the author with the most blogs', () => {
+    const result = listHelper.mostBlogs(blogs)
+    assert.deepStrictEqual(result, { author: "Robert C. Martin", blogs: 3 })
+    console.log(result)
   })
 })
