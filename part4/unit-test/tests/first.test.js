@@ -107,6 +107,16 @@ describe('max likes', () => {
       __v: 0
     })
   })
+
+  test('returns the author with the most likes in a formatted object', () => {
+    const result = listHelper.mostLikes(blogs)
+    assert.deepStrictEqual(result, {
+      author: "Edsger W. Dijkstra",
+      likes: 17
+    })
+  })
+
+
 })
 
 
