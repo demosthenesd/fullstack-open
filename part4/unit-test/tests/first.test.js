@@ -114,7 +114,7 @@ describe('max likes', () => {
       author: "Edsger W. Dijkstra",
       likes: 17
     })
-  })
+})
 
 
 })
