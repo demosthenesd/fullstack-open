@@ -1,7 +1,13 @@
 const mongoose = require("mongoose");
+const { unlink } = require("../app");
 
 const userSchema = mongoose.Schema({
-    username: String,
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        minlength: 3,
+    },
     password: String,
     name: String,
 });
