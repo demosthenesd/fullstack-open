@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 
+import Notification from "./components/Notification";
 import loginService from "./services/login";
 const App = () => {
     const [blogs, setBlogs] = useState([]);
@@ -13,7 +14,14 @@ const App = () => {
     useEffect(() => {
         blogService.getAll().then((blogs) => setBlogs(blogs));
     }, []);
-
+    useEffect(() => {
+        const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+        if (loggedUserJSON) {
+            const user = JSON.parse(loggedUserJSON);
+            setUser(user);
+            noteService.setToken(user.token);
+        }
+    }, []);
     const handleLogin = async (event) => {
         event.preventDefault();
 
@@ -22,6 +30,8 @@ const App = () => {
                 username,
                 password,
             });
+            window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+            blogService.setToken(user.token);
             setUser(user);
             setUsername("");
             setPassword("");
@@ -59,6 +69,7 @@ const App = () => {
     if (user === null) {
         return (
             <div>
+                <Notification message={errorMessage} />
                 <h2>Log in to application</h2>
                 {loginForm()}
             </div>
@@ -67,8 +78,8 @@ const App = () => {
 
     return (
         <div>
+            <Notification message={errorMessage} />
             <h2>blogs</h2>
-
             {blogs.map((blog) => (
                 <Blog key={blog.id} blog={blog} />
             ))}
