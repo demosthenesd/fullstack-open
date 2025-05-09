@@ -9,6 +9,7 @@ const App = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
+    const [title, setTitle] = useState("");
 
     const [errorMessage, setErrorMessage] = useState(null);
     useEffect(() => {
@@ -46,6 +47,11 @@ const App = () => {
     const handleLogout = () => {
         setUser(null);
         window.localStorage.removeItem("loggedBlogAppUser");
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("WEWE");
     };
 
     const loginForm = () => (
@@ -88,6 +94,17 @@ const App = () => {
             <h2>blogs</h2>
             <h4>Welcome, youre logged in {user.name}</h4>
             <button onClick={handleLogout}> logout </button>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    Title:{" "}
+                    <input
+                        type="text"
+                        value={title}
+                        name="Title"
+                        onChange={({ target }) => setTitle(target.value)}
+                    />{" "}
+                </div>
+            </form>
             {blogs.map((blog) => (
                 <Blog key={blog.id} blog={blog} />
             ))}
